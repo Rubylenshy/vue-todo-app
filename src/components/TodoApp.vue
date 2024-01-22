@@ -1,5 +1,8 @@
 <script>
 
+import TodoItem from './TodoItem.vue';
+import TodoFooter from './TodoFooter.vue';
+
 const filters = {
     all: (todos) => todos,
     active: (todos) => todos.filter((todo) => !todo.completed),
@@ -8,6 +11,11 @@ const filters = {
 
 export default {
     name: 'TodoApp',
+
+    components: {
+        TodoItem,
+        TodoFooter
+    },
     
     // app initial state
     data: () => ({
@@ -107,49 +115,22 @@ export default {
             <input class="toggle-all" id="toggle-all" type="checkbox" :checked="remaining === 0" @change="toggleAll">
             <label for="toggle-all">Mark all as complete</label>
             <ul class="todo-list">
-                <li v-for="todo in filteredTodos" :key="todo.id" class="todo-item" :class="{ completed: todo.completed, editing: todo === editedTodo }">
-                    <!-- NOTE - change to view-todo -->
-                    <div class="view"> 
-                        <!-- NOTE - change to toggle-done -->
-                        <input class="toggle" type="checkbox" v-model="todo.completed">
-                        <label @dblclick="editTodo(todo)">{{ todo.title }}</label>
-                        <!-- NOTE: Change to remove-todo -->
-                        <button class="destroy" @click="removeTodo(todo)"></button>
-                    </div>
-                    <!-- NOTE: Change to edit-todo -->
-                    <input
-                        v-if="todo === editedTodo"
-                        class="edit"
-                        type="text"
-                        v-model="todo.title"
-                        @vnode-mounted="({ el }) => el.focus()"
-                        @keyup.escape="cancelEdit(todo)"
-                        @blur="doneEdit(todo)"
-                        @keyup.enter="doneEdit(todo)"
-                    >
-                </li>
+                <TodoItem 
+                    :filteredTodos="filteredTodos"
+                    :editedTodo="editedTodo"
+                    @editTodo="editTodo"
+                    @removeTodo="removeTodo"
+                    @cancelEdit="cancelEdit"
+                    @doneEdit="doneEdit"
+                />
             </ul>
         </section>
-        <footer class="footer" v-show="todos.length">
-            <span class="todo-count">
-                <strong>{{ remaining }}</strong>
-                <span>{{ remaining === 1 ? ' item' : ' items' }} left</span>
-            </span>
-            <ul class="filters">
-                <li>
-                    <a href="#/all" :class="{ selected: visibility === 'all' }">All</a>
-                </li>
-                <li>
-                    <a href="#/active" :class="{ selected: visibility === 'active' }">Active</a>
-                </li>
-                <li>
-                    <a href="#/completed" :class="{ selected: visibility === 'completed' }">Completed</a>
-                </li>
-            </ul>
-            <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
-                Clear completed todos
-            </button>
-        </footer>
+        <TodoFooter
+            :remaining="remaining"
+            :visibility="visibility"
+            :todos="todos"
+            @removeCompleted="removeCompleted"
+        />
     </section>
 </template>
 
