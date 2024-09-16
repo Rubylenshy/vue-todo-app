@@ -17,19 +17,17 @@ export default {
         TodoFooter
     },
     
-    // app initial state
     data: () => ({
-        todos: JSON.parse(localStorage.getItem('todoappData') || '[]'),
+        todos: JSON.parse(localStorage.getItem('todoAppData') || '[]'),
         visibility: 'all',
         beforeEditCancel: null,
         editedTodo: null
     }),
 
-    // watch todos change for localStorage persistence
     watch: {
         todos: {
             handler(todos) {
-                localStorage.setItem('todoappData', JSON.stringify(todos))
+                localStorage.setItem('todoAppData', JSON.stringify(todos))
             },
             deep: true
         }
@@ -49,7 +47,6 @@ export default {
         }
     },
 
-    // methods that implement data logic
     methods: {
         onHashChange() {
             var visibility = window.location.hash.replace(/#\/?/, '');
@@ -67,7 +64,6 @@ export default {
             this.todos = filters.active(this.todos)
         },
         addTodo(event) {
-            // TODO: Add code here.
             const value = event.target.value.trim();
 
             if (!value) {
