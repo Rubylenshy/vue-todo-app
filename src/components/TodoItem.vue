@@ -4,8 +4,6 @@ export default {
     
     props: ['filteredTodos', 'editedTodo'],
 
-    emits: ['editTodo', 'removeTodo', 'cancelEdit', 'doneEdit'],
-
     data: () => ({}),
 
     watch: {},
